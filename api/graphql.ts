@@ -4,14 +4,11 @@ import { graphql, buildSchema } from 'graphql';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
+import { Point } from '../types';
+
 import '../config/mongo';
 
 const Hiking = model('Hiking');
-
-const orleans = {
-  lat: 47.9047,
-  lng: 1.9076,
-};
 
 // Construct a schema, using GraphQL schema language
 const schema = buildSchema(
@@ -21,6 +18,11 @@ const schema = buildSchema(
   ),
 );
 
+interface HikingsProps {
+  readonly limit?: number;
+  readonly near: Point['coordinates']; // [lng, lat]
+}
+
 // The root provides a resolver function for each API endpoint
 const root = {
   hiking: async ({ id, url }): Promise<Document> => {
@@ -28,12 +30,11 @@ const root = {
       ? Hiking.findById(id).exec()
       : Hiking.findOne({ url }).exec();
   },
-  hikings: async ({ limit }): Promise<Document[]> => {
+  hikings: async ({ limit = 10, near }: HikingsProps): Promise<Document[]> => {
     return Hiking.aggregate().near({
-      near: [orleans.lng, orleans.lat],
-      distanceField: 'calculated', // required
+      near,
+      distanceField: 'meta.distance', // required
       maxDistance: 5000, // 5km
-      // query: { type: 'public' },
       includeLocs: 'details.departure',
       uniqueDocs: true,
       spherical: true,

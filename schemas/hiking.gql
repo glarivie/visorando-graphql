@@ -53,6 +53,10 @@ type Waypoint {
   longitude: Float!
 }
 
+type Meta {
+  distance: Float
+}
+
 type Hiking {
   id: ID!
   url: String!
@@ -66,9 +70,10 @@ type Hiking {
   reviews: [Review]!
   images: [String]!
   waypoints: [Waypoint]
+  meta: Meta
 }
 
 type Query {
   hiking (url: String, id: ID): Hiking
-  hikings (limit: Int): [Hiking]
+  hikings (limit: Int, near: [Float]!): [Hiking]
 }
