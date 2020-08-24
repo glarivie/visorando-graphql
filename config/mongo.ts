@@ -17,8 +17,7 @@ const options: ConnectionOptions = {
   promiseLibrary: Promise,
   useUnifiedTopology: true,
   keepAlive: true,
-  connectTimeoutMS: 0,
-  reconnectTries: 30,
+  connectTimeoutMS: 0
 };
 
 // Create Mongo database connection
