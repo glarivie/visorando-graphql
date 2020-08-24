@@ -75,5 +75,5 @@ type Hiking {
 
 type Query {
   hiking (url: String, id: ID): Hiking
-  hikings (limit: Int, near: [Float]!): [Hiking]
+  hikings (limit: Int, near: [Float]): [Hiking]
 }

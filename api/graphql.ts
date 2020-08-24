@@ -1,6 +1,7 @@
 import { NowRequest, NowResponse } from '@vercel/node';
 import { Document, model } from 'mongoose';
 import { graphql, buildSchema } from 'graphql';
+import { isUndefined } from 'lodash';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -20,7 +21,7 @@ const schema = buildSchema(
 
 interface HikingsProps {
   readonly limit?: number;
-  readonly near: Point['coordinates']; // [lng, lat]
+  readonly near?: Point['coordinates']; // [lng, lat]
 }
 
 // The root provides a resolver function for each API endpoint
@@ -31,6 +32,10 @@ const root = {
       : Hiking.findOne({ url }).exec();
   },
   hikings: async ({ limit = 10, near }: HikingsProps): Promise<Document[]> => {
+    if (isUndefined(near)) {
+      return Hiking.find({}).limit(limit);
+    }
+
     return Hiking.aggregate().near({
       near,
       distanceField: 'meta.distance', // required
