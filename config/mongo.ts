@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { ConnectionOptions } from 'mongoose';
 
 import Hiking from '../schemas/hiking.mongoose';
 
@@ -10,12 +10,15 @@ const {
   MONGODB_DATABASE,
 } = process.env as { [k: string]: string };
 
-const options = {
+const options: ConnectionOptions = {
   useCreateIndex: true,
   useFindAndModify: false,
   useNewUrlParser: true,
   promiseLibrary: Promise,
   useUnifiedTopology: true,
+  keepAlive: true,
+  connectTimeoutMS: 0,
+  reconnectTries: 30,
 };
 
 // Create Mongo database connection
