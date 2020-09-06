@@ -3,7 +3,7 @@ import { isUndefined } from 'lodash';
 import { ApolloServer } from 'apollo-server-micro';
 
 import typeDefs from '../schemas/hikings.typeDefs';
-import { Point } from '../types';
+import { Point, Hiking } from '../types';
 
 import '../config/mongo';
 
@@ -16,12 +16,10 @@ interface HikingsArgs {
 
 const resolvers = {
   Query: {
-    hiking: async (_, { id, url }): Promise<Document> => {
-      return id
-        ? Hiking.findById(id).exec()
-        : Hiking.findOne({ url }).exec();
+    hiking: async (_: unknown, params: Partial<Hiking>): Promise<Document> => {
+      return Hiking.findOne(params);
     },
-    hikings: async (_, { limit = 10, near }: HikingsArgs): Promise<Document[]> => {
+    hikings: async (_: unknown, { limit = 10, near }: HikingsArgs): Promise<Document[]> => {
       if (isUndefined(near)) {
         return Hiking.find({}).limit(limit);
       }
