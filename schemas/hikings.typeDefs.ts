@@ -3,9 +3,9 @@ import { gql } from 'apollo-server-micro';
 const typeDefs = gql`
   scalar Date
 
-  type Coordinate {
-    lat: Float!
-    lng: Float!
+  type Point {
+    type: String!
+    coordinates: [String]!
   }
 
   type Vertical {
@@ -19,7 +19,7 @@ const typeDefs = gql`
   }
 
   type Details {
-    reference: String
+    ign: String
     duration: String
     distance: Float!
     vertical: Vertical!
@@ -30,7 +30,8 @@ const typeDefs = gql`
     region: String
     city: String
     zipCode: Int
-    coordinate: Coordinate!
+    departure: Point!
+    arrival: Point
   }
 
   type Rating {
