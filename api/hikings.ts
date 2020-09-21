@@ -23,7 +23,7 @@ export default async ({ query, method }: NowRequest, response: NowResponse) => {
   const data: Document[] = isUndefined(near)
     ? await Hiking.find({}).limit(toNumber(limit))
     : await Hiking.aggregate().near({
-      near,
+      near: near.map(toNumber),
       distanceField: 'meta.distance', // required
       maxDistance: 5000, // 5km
       includeLocs: 'details.departure',
