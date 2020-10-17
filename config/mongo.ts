@@ -4,7 +4,6 @@ import Hiking from '../schemas/hiking.mongoose';
 
 const {
   MONGODB_USERNAME,
-  MONGODB_PORT,
   MONGODB_PASSWORD,
   MONGODB_HOST,
   MONGODB_DATABASE,
@@ -22,11 +21,11 @@ const options: ConnectionOptions = {
 
 // Create Mongo database connection
 mongoose.connect(
-  `mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}`,
+  `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}/${MONGODB_DATABASE}?retryWrites=true&w=majority`,
   options,
 );
 
-mongoose.connection.on('connected', () => console.info('[MongoDB] is connected on port', MONGODB_PORT));
+mongoose.connection.on('connected', () => console.info('[MongoDB] is connected'));
 mongoose.connection.on('disconnected', () => console.warn('[MongoDB] is disconnected'));
 
 // Register Models
