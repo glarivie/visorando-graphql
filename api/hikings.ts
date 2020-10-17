@@ -21,16 +21,20 @@ export default async ({ query, method }: NowRequest, response: NowResponse) => {
   const { limit = 10, near } = query as HikingsArgs;
 
   const data: Document[] = isUndefined(near)
-    ? await Hiking.find({}).limit(toNumber(limit))
-    : await Hiking.aggregate().near({
-      near: near.map(toNumber),
-      distanceField: 'meta.distance', // required
-      maxDistance: 5000, // 5km
-      includeLocs: 'details.departure',
-      uniqueDocs: true,
-      spherical: true,
-      limit: toNumber(limit),
-    });
+    ? await Hiking
+      .find({})
+      .limit(toNumber(limit))
+    : await Hiking
+      .aggregate()
+      .near({
+        near: near.map(toNumber),
+        distanceField: 'meta.distance', // required
+        maxDistance: 5000, // 5km
+        includeLocs: 'details.departure',
+        uniqueDocs: true,
+        spherical: true,
+      })
+      .limit(toNumber(limit));
 
   return response.status(200).send(data);
 };
